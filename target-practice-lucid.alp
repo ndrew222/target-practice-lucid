@@ -16,24 +16,6 @@
                     "type": "DiskFile",
                     "path": "source/led.luc"
                 }
-            },
-            {
-                "file": {
-                    "type": "Component",
-                    "path": "Miscellaneous/counter.luc"
-                }
-            },
-            {
-                "file": {
-                    "type": "Component",
-                    "path": "Pulses/edge_detector.luc"
-                }
-            },
-            {
-                "file": {
-                    "type": "Component",
-                    "path": "Conditioning/reset_conditioner.luc"
-                }
             }
         ],
         "constraintFiles": [

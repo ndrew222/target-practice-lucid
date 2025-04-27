@@ -11,32 +11,27 @@ module alchitry_top (
     output usb_tx           // USB->Serial output
 ) {
     
-    sig rst                 // reset signal
-    sig led_index
-//    sig slow_clock // a wire holding current slow clock signal
+//    sig rst                 // reset signal
+//    sig led_index
     
-//    const SIZE = 8 // set SIZE to any value you want
-//    const SLOW_CLOCK_DEFAULT_SPEED = $is_sim() ? 8 : 28 // put 8  for sim, 28 for hardware
-    led_loop led_instance (.clk(clk))
 
     .clk(clk) {
         // The reset conditioner is used to synchronize the reset signal to the FPGA
         // clock. This ensures the entire FPGA comes out of reset at the same time.
-        reset_conditioner reset_cond
-        
-        .rst(rst) {
-//            dff counter[SIZE]
-//            dff speed_pointer[$clog2(SIZE)](#INIT(SLOW_CLOCK_DEFAULT_SPEED)) // to point (index) to certain bit of the counter dff
-        }
+//        reset_conditioner reset_cond
+        led_loop led_instance
     }
-    always {      
-//        counter.d = counter.q + 1 // by default: always increment by 1 
-//        speed_pointer.d = speed_pointer.q // by default: leave it unchanged
-        led[7:6]  = led_instance.set_idx
-        io_led    = led_instance.io_led
-        led[5:0]       = led_instance.led
-        reset_cond.in = ~rst_n  // input raw inverted reset signal
-        rst = reset_cond.out    // conditioned reset
+    always {
+        // led assignment
+        led[7:6] = led_instance.set_idx
+        led[5:0] = led_instance.led[5:0]
+        io_led   = led_instance.io_led
+//        reset_cond.in = ~rst_n  // input raw inverted reset signal
+//        rst = reset_cond.out    // conditioned reset
+
+        if (io_button[4:0] > 0 && led_instance.set_idx == b01) {
+            
+        }
         
         io_segment = b11000000
         io_select  = h0

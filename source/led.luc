@@ -9,42 +9,45 @@ module led_loop (
     //    dff led_index[3]  (.clk(clk), #INIT(b111))
     dff led_set[2]    (.clk(clk), #INIT(b10))
     dff right         (.clk(clk), #INIT(1))
+    dff clock[7]      (.clk(clk), #INIT(0))
     always {
+        clock.d = clock.q + 1
         led = led_index.q
+        set_idx = led_set.q
+        
         case (led_set.q) {
             b10:
                 io_led = {led_index.q, h00, h00}
-            
             b01:
                 io_led = {h00, led_index.q, h00}
-            
             b00:
                 io_led = {h00, h00, led_index.q}
             default:
                 io_led = {h00, h00, h00}
-            
         }
-        if (right.q == b1) {
-            led_index.d = led_index.q >> 1                       // shift right
-            if (led_index.q == b00000010 && led_set.q == b00) {   // if rightmost led lit
-                right.d = b0                                     // stop moving right
+        
+        if (&clock.q) {
+            if (right.q == b1) {
+                led_index.d = led_index.q >> 1                        // shift right
+                if (led_index.q == b00000010 && led_set.q == b00) {   // if rightmost led lit
+                    right.d = b0                                      // stop moving right
+                }
+                if (led_index.q == b00000001 && led_set.q > b00) {    // if led_set is not the rightmost
+                    led_index.d = b10000000                           // move led to the left
+                    led_set.d = led_set.q - 1                         // move 1 set to the right
+                }
             }
-            if (led_index.q == b00000001 && led_set.q > b00) {    // if led_set is not the rightmost
-                led_index.d = b10000000                          // move led to the left
-                led_set.d = led_set.q - 1                        // move 1 set to the right
+            if (right.q == b0) {                                      // if not right (ie: left)
+                led_index.d = led_index.q * 2                         // shift left
+                
+                if (led_index.q == b01000000 && led_set.q == b10) {
+                    right.d = b1
+                }
+                if (led_index.q == b10000000 && led_set.q < b10) {
+                    led_index.d  = b00000001
+                    led_set.d = led_set.q + 1
+                }
             }
         }
-        if (right.q == b0) {                                     // if not right (ie: left)
-            led_index.d = led_index.q * 2                        // shift left
-            
-            if (led_index.q == b01000000 && led_set.q == b10) {
-                right.d = b1
-            }
-            if (led_index.q == b10000000 && led_set.q < b10) {
-                led_index.d  = b00000001
-                led_set.d = led_set.q + 1
-            }
-        }
-        set_idx = led_set.q
     }
 }
