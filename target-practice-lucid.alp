@@ -16,6 +16,36 @@
                     "type": "DiskFile",
                     "path": "source/led.luc"
                 }
+            },
+            {
+                "file": {
+                    "type": "DiskFile",
+                    "path": "source/fsm.luc"
+                }
+            },
+            {
+                "file": {
+                    "type": "Component",
+                    "path": "Conditioning/reset_conditioner.luc"
+                }
+            },
+            {
+                "file": {
+                    "type": "DiskFile",
+                    "path": "source/seven_seg.luc"
+                }
+            },
+            {
+                "file": {
+                    "type": "Component",
+                    "path": "Pulses/edge_detector.luc"
+                }
+            },
+            {
+                "file": {
+                    "type": "DiskFile",
+                    "path": "source/multi_seven_seg.luc"
+                }
             }
         ],
         "constraintFiles": [
