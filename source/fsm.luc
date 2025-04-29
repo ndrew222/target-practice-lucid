@@ -13,7 +13,7 @@ module fsm (
             dff state[$width(States)]
             dff new_state[$width(States)]
             dff score[5]
-            dff clock[9] (#INIT(0))
+            dff clock[26] (#INIT(0))
             dff timeout
             
             
@@ -25,6 +25,8 @@ module fsm (
     
     always {
         led_instance.rst = rst
+        if (rst)
+            new_state.d = States.INIT
         out = state.q
         clock.d = clock.q + 1
         io_led = {8d7,8d7,8d7}

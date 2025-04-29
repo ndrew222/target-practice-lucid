@@ -10,11 +10,13 @@ module led_loop (
     //    dff led_index[3]  (.clk(clk), #INIT(b111))
     dff led_set[2]    (.clk(clk), #INIT(b10))
     dff right         (.clk(clk), #INIT(1))
-    dff clock[7]      (.clk(clk), #INIT(0)) //something like 24 for non-sim
+    dff clock[25]      (.clk(clk), #INIT(0)) //something like 24 for non-sim, 8 for sim
     always {
         if (rst) {
             clock.d = 0
-            led_index.d = hF0
+            led_index.d = b10000000
+            led_set.d = b10
+            right.d = b1
         }
         clock.d = clock.q + 1
         led = led_index.q
@@ -42,7 +44,7 @@ module led_loop (
                     led_set.d = led_set.q - 1                         // move 1 set to the right
                 }
             }
-            if (right.q == b0) {                                      // if not right (ie: left)
+            else if (right.q == b0) {                                      // if not right (ie: left)
                 led_index.d = led_index.q * 2                         // shift left
                 
                 if (led_index.q == b01000000 && led_set.q == b10) {
@@ -52,6 +54,11 @@ module led_loop (
                     led_index.d  = b00000001
                     led_set.d = led_set.q + 1
                 }
+            }
+            else {
+                right.d = b1
+                led_index.d = b10000000
+                led_set.d = b10
             }
         }
     }

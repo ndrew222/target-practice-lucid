@@ -46,19 +46,31 @@
                     "type": "DiskFile",
                     "path": "source/multi_seven_seg.luc"
                 }
-            }
-        ],
-        "constraintFiles": [
+            },
             {
                 "file": {
-                    "type": "DiskFile",
-                    "path": "constraint/alchitry.acf"
+                    "type": "Component",
+                    "path": "Miscellaneous/pipeline.luc"
                 }
             },
             {
                 "file": {
                     "type": "Component",
+                    "path": "Conditioning/button_conditioner.luc"
+                }
+            }
+        ],
+        "constraintFiles": [
+            {
+                "file": {
+                    "type": "Component",
                     "path": "Constraints/io_v1_pulldown.acf"
+                }
+            },
+            {
+                "file": {
+                    "type": "Component",
+                    "path": "Constraints/alchitry.acf"
                 }
             }
         ],
