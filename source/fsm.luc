@@ -35,7 +35,7 @@ module fsm #(
             new_state.d = States.INIT
         out = state.q
         clock.d = clock.q + 1
-        io_led = {8d6,8d3,8hE}
+        io_led = {8d0,8d0,8h0}
         
         if (new_state.q != state.q) {
             state.d = new_state.q
@@ -68,7 +68,11 @@ module fsm #(
                         new_state.d = States.SUCCESS
                         timeout.d = 0
                     }
-                    else if (butt_pulse == 1 && led_instance.set_idx != b01 && led_instance.led != b00001000) {
+                    else if (butt_pulse == 1 && score.q == 4d9) {
+                        new_state.d = States.FAIL
+                        timeout.d = 0
+                    }
+                    else if (butt_pulse == 1) {
                         new_state.d = States.FAIL
                         timeout.d = 0
                     }

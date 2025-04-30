@@ -40,6 +40,11 @@ module alchitry_top (
             io_segment = b11000000
             io_select  = h0
         }
+        else if (fsm.out == b11) {
+            io_led = {hFF, hFF, hFF}
+            io_segment = fsm.io_segment
+            io_select = hE
+        }
         else {
             io_segment = fsm.io_segment
             io_select = hE
