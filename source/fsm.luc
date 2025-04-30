@@ -1,39 +1,41 @@
-module fsm (
+module fsm #(
+    TIMER = $is_sim() ? 10 : 26
+) (
     input clk,  // clock
     input rst,  // reset
-    input io_button[5],
+    input butt_pulse,
     output io_led[3][8],
+    output io_segment[8],
+    output time,
     output out[3]
 ) {
     enum States {INIT, GAMESTART, SUCCESS, FAIL, GG}
-    sig button_pressed
     sig state_changed
     .clk(clk) {
         .rst(rst) {
             dff state[$width(States)]
             dff new_state[$width(States)]
-            dff score[5]
-            dff clock[26] (#INIT(0))
+            dff score[4]
+            dff clock[TIMER] (#INIT(0))
             dff timeout
             
             
         }
         led_loop led_instance
-        edge_detector button_pulse (.in(button_pressed), #RISE(1), #FALL(0))
+        
     }
     
-    
+    seven_seg seven_seg (.char(c{3x{h0}, score.q}))
     always {
+        time = timeout.q
+        io_segment = ~seven_seg.segs
+        
         led_instance.rst = rst
         if (rst)
             new_state.d = States.INIT
         out = state.q
         clock.d = clock.q + 1
-        io_led = {8d7,8d7,8d7}
-        if (io_button > 0)
-            button_pressed = 1
-        else
-            button_pressed = 0
+        io_led = {8d6,8d3,8hE}
         
         if (new_state.q != state.q) {
             state.d = new_state.q
@@ -44,10 +46,12 @@ module fsm (
         
         case (state.q) {
             States.INIT:
-                if (button_pressed == 1) {
+                if (butt_pulse == 1) {
                     new_state.d = States.GAMESTART
-                    led_instance.rst = button_pulse.out
+                    led_instance.rst = butt_pulse
                 }
+                else
+                    led_instance.rst = rst
             States.GAMESTART:
                 if (state_changed == 1) {
                     clock.d = 0
@@ -59,9 +63,13 @@ module fsm (
                 if (timeout.q == 1) {
                     io_led = led_instance.io_led
                     io_led[1][3] = 1
-                    if (button_pulse.out == 1 && led_instance.set_idx == b01 && led_instance.led == b00001000) {
+                    if (butt_pulse == 1 && led_instance.set_idx == b01 && led_instance.led == b00001000) {
                         score.d = score.q + 1
                         new_state.d = States.SUCCESS
+                        timeout.d = 0
+                    }
+                    else if (butt_pulse == 1 && led_instance.set_idx != b01 && led_instance.led != b00001000) {
+                        new_state.d = States.FAIL
                         timeout.d = 0
                     }
                 }
@@ -70,12 +78,19 @@ module fsm (
                 // show the score for a bit
                 if (&clock.q)
                     timeout.d = 1
-                if (timeout.q == 1 && io_button > 0)
+                if (timeout.q == 1 && butt_pulse == 1) {
                     new_state.d = States.GAMESTART
+                    led_instance.rst = butt_pulse
+                    timeout.d = 0
+                }
             
-            
-            
-            
+            States.FAIL:
+                if (&clock.q)
+                    timeout.d = 1
+                if (timeout.q == 1 && butt_pulse == 1) {
+                    new_state.d = b000
+                    score.d = 0
+                }
         }
     }
 }

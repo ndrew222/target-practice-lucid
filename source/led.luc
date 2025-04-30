@@ -1,5 +1,7 @@
-module led_loop (
-    input clk,  // clock
+module led_loop #(
+    TIMER = $is_sim() ? 7 : 24
+) (
+    input clk,
     input rst,
     output io_led[3][8],
     output set_idx[2],
@@ -10,7 +12,7 @@ module led_loop (
     //    dff led_index[3]  (.clk(clk), #INIT(b111))
     dff led_set[2]    (.clk(clk), #INIT(b10))
     dff right         (.clk(clk), #INIT(1))
-    dff clock[25]      (.clk(clk), #INIT(0)) //something like 24 for non-sim, 8 for sim
+    dff clock[TIMER]  (.clk(clk), #INIT(0)) //something like 24 for non-sim, 8 for sim
     always {
         if (rst) {
             clock.d = 0
@@ -18,7 +20,8 @@ module led_loop (
             led_set.d = b10
             right.d = b1
         }
-        clock.d = clock.q + 1
+        else
+            clock.d = clock.q + 1
         led = led_index.q
         set_idx = led_set.q
         

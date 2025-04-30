@@ -1,4 +1,4 @@
-/*module seven_seg (
+module seven_seg (
     input char[4],
     output segs[7]
 ) {
@@ -18,4 +18,3 @@
         }
     }
 }
-*/
