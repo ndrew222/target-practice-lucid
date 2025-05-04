@@ -18,18 +18,17 @@ module fsm #(
             dff score[4]
             dff clock[TIMER] (#INIT(0))
             dff timeout
-            
-            
         }
         led_loop led_instance
         
     }
-    
+
     seven_seg seven_seg (.char(c{3x{h0}, score.q}))
+
     always {
         time = timeout.q
         io_segment = ~seven_seg.segs
-        
+
         led_instance.rst = rst
         if (rst)
             new_state.d = States.INIT

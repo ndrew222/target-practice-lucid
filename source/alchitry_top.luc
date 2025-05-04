@@ -10,10 +10,9 @@ module alchitry_top (
     input usb_rx,           // USB->Serial input
     output usb_tx           // USB->Serial output
 ) {
-    
+
     sig rst                 // reset signal
     sig button_pressed
-    
     .clk(clk) {
         // The reset conditioner is used to synchronize the reset signal to the FPGA
         // clock. This ensures the entire FPGA comes out of reset at the same time.
@@ -35,7 +34,7 @@ module alchitry_top (
         fsm.butt_pulse = butt_pulse
         io_led = fsm.io_led
         led = fsm.out
-        
+
         if (fsm.out == 0){
             io_segment = b11000000
             io_select  = h0
@@ -50,6 +49,7 @@ module alchitry_top (
             io_select = hE
         }
         led[7] = fsm.time
+
         usb_tx = usb_rx         // echo the serial data
     }
 }

@@ -8,8 +8,6 @@ module led_loop #(
     output led[8]
 ) {
     dff led_index[8]  (.clk(clk), #INIT(b10000000))
-    //    dff led_set[3]    (.clk(clk), #INIT(b100))
-    //    dff led_index[3]  (.clk(clk), #INIT(b111))
     dff led_set[2]    (.clk(clk), #INIT(b10))
     dff right         (.clk(clk), #INIT(1))
     dff clock[TIMER]  (.clk(clk), #INIT(0)) //something like 22 for non-sim, 8 for sim
@@ -24,7 +22,7 @@ module led_loop #(
             clock.d = clock.q + 1
         led = led_index.q
         set_idx = led_set.q
-        
+
         case (led_set.q) {
             b10:
                 io_led = {led_index.q, h00, h00}
@@ -35,7 +33,7 @@ module led_loop #(
             default:
                 io_led = {h00, h00, h00}
         }
-        
+
         if (&clock.q) {
             if (right.q == b1) {
                 led_index.d = led_index.q >> 1                        // shift right
@@ -49,7 +47,7 @@ module led_loop #(
             }
             else if (right.q == b0) {                                      // if not right (ie: left)
                 led_index.d = led_index.q * 2                         // shift left
-                
+
                 if (led_index.q == b01000000 && led_set.q == b10) {
                     right.d = b1
                 }
