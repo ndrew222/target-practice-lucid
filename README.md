@@ -10,7 +10,7 @@ The goal is to press any button during the instant that the LED is located in th
 
 On hit, the game will enter the `SUCCESS` state, where your score will be displayed to you. After a brief timeout to avoid accidentally skipping out of the screen, pressing any button will result in `GAMESTART` being entered again. There is an LED on the Alchitry Au board to indicate if the timeout period has passed (bottom LED).
 
-This is repeated until you miss the glowing LED, after which the `FAIL` state is entered [^1].
+This is repeated until you miss the glowing LED, after which the `FAIL` state is entered[^1].
 There, your score is once again displayed, but hitting any button will bring your game back to the `INIT` state.
 
 # Some notable limitations
@@ -21,4 +21,4 @@ There can occasionally be a weird bug where either the LED runs off the screen, 
 
 There is this other weird bug which have not been able to find the cause of where the LED does not start in the same place whenever the game is started. While this is not game breaking, has been extremely frustrating on the development side, as I can't seem to find the cause of it.
 
-[^1] The game score indicator only counts up to 9, as there was insufficient time to implement multiple digits in the seven segment display. The game's difficulty is tweaked to account for that, and also once you reach 9 points, the next hit is guaranteed to fail. On testing, it has been observed that one is statistically more likely to fail as the score increases.
+[^1]: The game score indicator only counts up to 9, as there was insufficient time to implement multiple digits in the seven segment display. The game's difficulty is tweaked to account for that, and also once you reach 9 points, the next hit is guaranteed to fail. On testing, it has been observed that one is statistically more likely to fail as the score increases.
