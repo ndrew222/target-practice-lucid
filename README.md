@@ -10,7 +10,7 @@ The goal is to press any button during the instant that the LED is located in th
 
 On hit, the game will enter the `SUCCESS` state, where your score will be displayed to you. After a brief timeout to avoid accidentally skipping out of the screen, pressing any button will result in `GAMESTART` being entered again. There is an LED on the Alchitry Au board to indicate if the timeout period has passed (bottom LED).
 
-This is repeated until you miss the glowing LED, after which the `FAIL` state is entered[^1].
+This is repeated until you miss the glowing LED, after which the `FAIL` state is entered [^1].
 There, your score is once again displayed, but hitting any button will bring your game back to the `INIT` state.
 
 # Some notable limitations
